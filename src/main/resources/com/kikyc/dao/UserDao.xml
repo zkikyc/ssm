@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kikyc.dao.UserDao">
+
+<select id="list" resultType="com.kikyc.bean.User" useCache="true">
+    select * from users
+</select>
+    <insert id="insert">
+        insert into users (user_id,name,password)values(#{userId},#{name},#{password})
+    </insert>
+
+    <update id="update">
+        update users
+        <set>
+            <if test="name !='' and name !=null">
+                name = #{name},
+            </if>
+                <if test ="password!=null and password !=''">
+                    password = #{password},
+                </if>
+        </set>
+        <where>
+        user_id = #{userId}
+        </where>
+    </update>
+<cache type="com.kikyc.util.RedisCache"></cache>
+</mapper>

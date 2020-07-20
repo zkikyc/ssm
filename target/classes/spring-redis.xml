@@ -1,0 +1,44 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+
+    <!-- 连接池基本参数配置，类似数据库连接池 -->
+    <context:property-placeholder location="classpath*:redis.properties" />
+
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis.maxActive}"/>
+        <property name="maxIdle" value="${redis.maxIdle}" />
+        <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+    </bean>
+
+    <!-- 连接池配置，类似数据库连接池 -->
+<!--    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.RedisStandaloneConfiguration" >-->
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" >
+        <property name="hostName" value="${redis.host}"></property>
+        <property name="port" value="${redis.port}"></property>
+        <property name="password" value="${redis.pass}"></property>
+    </bean>
+
+    <!-- 调用连接池工厂配置 -->
+<!--     <bean id="redisTemplate" class=" org.springframework.data.redis.core.RedisTemplate">-->
+<!--        <property name="jedisConnectionFactory" ref="jedisConnectionFactory"></property>-->
+
+<!--&lt;!&ndash;        如果不配置Serializer，那么存储的时候智能使用String，如果用User类型存储，那么会提示错误User can't cast  to String！！！&ndash;&gt;-->
+<!--         <property name="keySerializer">-->
+<!--            <bean-->
+<!--            class="org.springframework.data.redis.serializer.StringRedisSerializer" />-->
+<!--        </property>-->
+<!--        <property name="valueSerializer">-->
+<!--            <bean-->
+<!--                class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />-->
+<!--        </property>-->
+<!--    </bean>-->
+    <bean id="redisCacheTransfer" class="com.kikyc.util.RedisCacheTransfer">
+        <property name="jedisConnectionFactory" ref="jedisConnectionFactory" />
+    </bean>
+</beans>
